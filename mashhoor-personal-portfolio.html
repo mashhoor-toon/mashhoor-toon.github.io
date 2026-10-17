@@ -362,7 +362,6 @@
       <a href="#posts">গ্যালারি</a>
       <a href="#terms">শর্তাবলী</a>
       <a href="#contact" class="btn btn-red btn-nav">যোগাযোগ</a>
-      <button class="btn btn-ghost btn-nav" id="adminOpen" type="button">⚙️ অ্যাডমিন</button>
     </nav>
   </div>
 </header>
@@ -1172,7 +1171,15 @@
       overlay = document.getElementById("adminOverlay");
   function openAdmin(){ drawer.classList.add("open"); overlay.classList.add("show"); }
   function closeAdmin(){ drawer.classList.remove("open"); overlay.classList.remove("show"); }
-  document.getElementById("adminOpen").addEventListener("click", openAdmin);
+  /* অ্যাডমিন প্যানেল শুধু আলাদা লিংক (#admin) দিয়ে খুলবে — সাইটে কোনো বাটন বা ইশারা নেই */
+  function openAdminFromHash(){
+    if(location.hash === "#admin"){
+      openAdmin();
+      if(window.history && history.replaceState) history.replaceState(null, "", location.pathname + location.search);
+    }
+  }
+  openAdminFromHash();
+  window.addEventListener("hashchange", openAdminFromHash);
   document.getElementById("adminClose").addEventListener("click", closeAdmin);
   overlay.addEventListener("click", closeAdmin);
   document.addEventListener("keydown", function(e){ if(e.key === "Escape"){ closeLb(); closeAdmin(); } });
