@@ -331,6 +331,7 @@
   .terms-accept{margin-top:18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
   #termsAccept.accepted{background:#1E9E5A;box-shadow:0 10px 24px rgba(30,158,90,.35)}
   .pub-status{font-weight:700;margin:10px 0 0;white-space:pre-wrap}
+  .token-state{font-size:14px;font-weight:700;margin:6px 0 2px;min-height:20px}
   .gh-help{background:var(--surface-2);border:2px dashed var(--pink);border-radius:12px;padding:12px 14px;margin-top:12px;font-size:14.5px}
   .gh-help ol{margin:6px 0 0;padding-left:20px}
   .gh-help li{margin:3px 0}
@@ -863,13 +864,16 @@
 
     <div class="adm-sec">
       <h3>🚀 সরাসরি পাবলিশ (GitHub)</h3>
-      <p class="adm-note">প্যানেলের সব পরিবর্তন এক ক্লিকে GitHub-এ পাবলিশ করুন — আপডেট করা কনটেন্ট <b>content.json</b> ফাইলে কমিট হবে, আর সাইট সেটাই পড়ে সবাইকে দেখাবে। এর জন্য একবারের জন্য একটি GitHub টোকেন লাগবে। টোকেনটি শুধু এই সেশনের জন্য ব্রাউজারের মেমোরিতে থাকে — পেজ বন্ধ করলে আবার পেস্ট করতে হবে।</p>
+      <p class="adm-note">প্যানেলের সব পরিবর্তন এক ক্লিকে GitHub-এ পাবলিশ করুন — আপডেট করা কনটেন্ট <b>content.json</b> ফাইলে কমিট হবে, আর সাইট সেটাই পড়ে সবাইকে দেখাবে। এর জন্য একটি GitHub টোকেন লাগে।</p>
+      <p class="adm-note"><b>বার বার পেস্ট করতে হয় কেন?</b> টোকেন হলো আপনার GitHub অ্যাকাউন্টের গোপন চাবির মতো জিনিস — তাই নিরাপত্তার জন্য এটি সাইটে বা ব্রাউজারে স্থায়ীভাবে সেভ করা হয় না (সেভ থাকলে অন্য কেউ সেটা হাতে পেয়ে আপনার অ্যাকাউন্টের নিয়ন্ত্রণ নিতে পারত)। পরিবর্তে টোকেনটি শুধু এই পেজটি খোলা থাকা পর্যন্ত মেমোরিতে থাকে: <b>একবার পেস্ট করলেই এই ভিজিটে যতবার খুশি পাবলিশ করা যাবে — বার বার পেস্ট করতে হবে না।</b> শুধু পেজটি বন্ধ করে আবার খুললে, অথবা রিলোড করলে, নিরাপত্তার কারণে একবার নতুন করে পেস্ট করতে হয়।</p>
       <label>GitHub Personal Access Token
         <input type="password" id="ghToken" placeholder="ghp_… টোকেন পেস্ট করুন" autocomplete="off" />
       </label>
+      <p class="token-state" id="tokenState" role="status"></p>
       <div class="adm-row">
         <button class="btn btn-red btn-sm" id="admPublish" type="button">🚀 সরাসরি পাবলিশ</button>
         <button class="btn btn-ghost btn-sm" id="admReset" type="button">↩️ আসল অবস্থায় ফিরুন</button>
+        <button class="btn btn-ghost btn-sm" id="admForgetToken" type="button">🗑️ টোকেন মুছুন</button>
       </div>
       <p class="pub-status" id="pubStatus" role="status"></p>
       <div class="gh-help">
@@ -1160,8 +1164,8 @@
   if(window.fetch){
     fetch("data:application/json;base64,ewogICJhZGRyZXNzIjogIk5ldyBZb3JrIENpdHksIFVuaXRlZCBTdGF0ZXMiLAogICJlbWFpbCI6ICJicmFuZC5wcm90ZWN0aW9uQGhvdG1haWwuY29tIiwKICAiZXBpc29kZXMiOiBbCiAgICB7CiAgICAgICJhbHQiOiAi4Kah4Kay4Ka+4Kaw4KeH4KawIOCmrOCmuOCnjeCmpOCmviDgppXgpr7gpoHgpqfgp4cg4Kao4Ka/4Kav4Ka84KeHIOCmp+CnjeCmrOCmguCmuOCmuOCnjeCmpOCnguCmquCnh+CmsCDgppPgpqrgprAg4Kam4Ka/4Kav4Ka84KeHIOCmieCmoeCmvOCnhyDgpq/gpr7gppPgpq/gprzgpr4g4Ka44KeN4Kav4KeB4KafLeCmquCmsOCmviDgprLgp4vgppXgp4fgprAg4KaV4KeN4Kav4Ka+4Kaw4Ka/4KaV4KeH4Kaa4Ka+4KawIiwKICAgICAgImRlc2MiOiAi4Kaa4Ka+4Kaw4Kam4Ka/4KaV4KeHIOCmp+CnjeCmrOCmguCmuOCmuOCnjeCmpOCnguCmqiwg4Kau4Ka+4Kad4KaW4Ka+4Kao4KeHIOCmoeCmsuCmvuCmsOCnh+CmsCDgpqzgprjgp43gpqTgpr4g4Kao4Ka/4Kav4Ka84KeHIOCmieCmoeCmvOCmvuCmsiDigJQg4Kay4KeL4Kat4KeH4KawIOCmj+CmhyDgpongpqHgprzgpr7gpqjgpocg4KaP4KaHIOCmleCnjeCmr+CmvuCmsOCmv+CmleCnh+CmmuCmvuCmsOCnh+CmsCDgppfgprLgp43gpqrgpaQiLAogICAgICAiaW1nIjogImFzc2V0cy9wb3N0MS5qcGciLAogICAgICAidGFnIjogIuCmuOCnjeCmr+CmvuCmn+CmvuCmr+CmvOCmvuCmsCIsCiAgICAgICJ0aXRsZSI6ICLgpp/gpr7gppXgpr7gprAg4Kas4Ka44KeN4Kak4Ka+IOCmleCmvuCmgeCmp+CnhyDgpongpqHgprzgpr7gprIhIPCfkrAiCiAgICB9LAogICAgewogICAgICAiYWx0IjogIuCmn+CnjeCmsOCmvuCmleCmreCmsOCnjeCmpOCmvyDgprjgp4vgpqjgpr7gprLgpr8g4KaX4Kaw4KeBIOCmqOCmv+Cmr+CmvOCnhyDgprngpr7gpofgppPgpq/gprzgp4cg4Kam4Ka/4Kav4Ka84KeHIOCmr+CmvuCmk+Cmr+CmvOCmviDgpqHgp43gprDgpr7gpofgpq3gpr7gprDgp4fgprAg4KaV4KeN4Kav4Ka+4Kaw4Ka/4KaV4KeH4Kaa4Ka+4KawIiwKICAgICAgImRlc2MiOiAi4KaP4KaVIOCmn+CnjeCmsOCmvuCmlSDgpq3gprDgp43gpqTgpr8g4Ka44KeL4Kao4Ka+4Kay4Ka/IOCml+CmsOCngSEg4Ka44Kau4KeN4Kaq4Kam4KeH4KawIOCmj+CmhyDgprngpr7gprjgp43gpq/gppXgprAg4Kav4Ka+4Kak4KeN4Kaw4Ka+IOCmpuCnh+CmluCnhyDgpqHgp43gprDgpr7gpofgpq3gpr7gprAg4Kao4Ka/4Kac4KeH4KaHIOCmueCnh+CmuOCnhyDgppbgp4HgpqjgpaQiLAogICAgICAiaW1nIjogImFzc2V0cy9wb3N0Mi5qcGciLAogICAgICAidGFnIjogIuCmleCnjeCmr+CmvuCmsOCmv+CmleCnh+CmmuCmvuCmsCIsCiAgICAgICJ0aXRsZSI6ICLgprjgp4vgpqjgpr7gprLgpr8g4KaX4Kaw4KeB4KawIOCmn+CnjeCmsOCmvuCmlSDwn5CEIgogICAgfSwKICAgIHsKICAgICAgImFsdCI6ICLgprngpr7gpqTgp4cg4Kaw4Ka+4KaH4Kar4KeH4KayLCDgpqrgp4fgppvgpqjgp4cg4Kam4KeB4Kaw4KeN4KaXIOCmhuCmsCDgpqrgpqTgpr7gppXgpr4g4oCUIOCmquCmvuCmueCmvuCmoeCmvOCnh+CmsCDgpprgp4LgpqHgprzgpr7gpq/gprwg4Kam4Ka+4KaB4Kah4Ka84Ka+4Kao4KeLIOCmpuCmvuCmoeCmvOCmv+Cmk+Cmr+CmvOCmvuCmsuCmviDgpqzgp43gpq/gppXgp43gpqTgpr/gprAg4KaV4KeN4Kav4Ka+4Kaw4Ka/4KaV4KeH4Kaa4Ka+4KawIOCmquCnjeCmsOCmpOCmv+CmleCng+CmpOCmvyIsCiAgICAgICJkZXNjIjogIuCmnOCmsuCmsOCmmeCnh+CmsCDgppvgp4vgpoHgpq/gprzgpr7gpq/gprwg4KaG4KaB4KaV4Ka+IOCmpuCng+CmquCnjeCmpCDgpqrgp43gprDgpqTgpr/gppXgp4PgpqTgpr8g4oCUIOCmquCnh+Cmm+CmqOCnhyDgpqrgp4HgprDgpqjgp4sg4Kam4KeB4Kaw4KeN4KaX4Kao4KaX4Kaw4KeAIOCmhuCmsCDgpongpqHgprzgpqjgp43gpqQg4Kaq4Kak4Ka+4KaV4Ka+4KWkIiwKICAgICAgImltZyI6ICJhc3NldHMvcG9zdDMuanBnIiwKICAgICAgInRhZyI6ICLgpqrgp43gprDgpqTgpr/gppXgp4PgpqTgpr8iLAogICAgICAidGl0bGUiOiAi4Kaq4Ka+4Ka54Ka+4Kah4Ka84KeH4KawIOCmmuCnguCmoeCmvOCmvuCmr+CmvCDgpqrgp43gprDgpqTgpr/gppXgp4PgpqTgpr8g8J+PlO+4jyIKICAgIH0sCiAgICB7CiAgICAgICJhbHQiOiAi4Kaf4Ka+4KaV4Ka+4KawIOCmqOCni+CmnyDgprngpr7gpqTgp4cg4KaV4Ka+4KaB4Kam4Kak4KeHIOCmpeCmvuCmleCmviDgprjgp43gpq/gp4Hgpp8t4Kaq4Kaw4Ka+IOCmm+Cni+CmnyDgpq7gpr7gpqjgp4Hgprfgpp/gpr/gprAg4Kaa4KeB4KayIOCmp+CmsOCnhyDgpp/gpr7gpqjgppvgp4fgpqgg4Kaw4Ka+4KaX4KeAIOCmj+CmlSDgpqzgp43gpq/gppXgp43gpqTgpr8g4oCUIOCmrOCnh+CmpOCmqCDgpqjgpr/gpq/gprzgp4cg4Kas4KeN4Kav4KaZ4KeN4KaXIiwKICAgICAgImRlc2MiOiAi4Kas4KeH4Kak4KaoIOCmj+CmsuCniywg4Ka54Ka/4Ka44Ka+4KasIOCmruCmv+CmsuCmsiDgpqjgpr4g4oCUIOCmuOCmvuCmp+CmvuCmsOCmoyDgpq7gpr7gpqjgp4Hgprfgp4fgprAg4KaP4KaHIOCmmuCmv+CmsOCmmuCnh+CmqOCmviDgppXgp43gprfgp4vgpq3gpocg4KaP4KaW4Ka+4Kao4KeHIOCmueCmvuCmuOCmv+CmsCDgppbgp4vgprDgpr7gppXgpaQiLAogICAgICAiaW1nIjogImFzc2V0cy9wb3N0NC5qcGciLAogICAgICAidGFnIjogIuCmuOCnjeCmr+CmvuCmn+CmvuCmr+CmvOCmvuCmsCIsCiAgICAgICJ0aXRsZSI6ICLgpqzgp4fgpqTgpqjgp4fgprAg4Ka54Ka/4Ka44Ka+4KasIOCmruCnh+CmsuCnhyDgpqjgpr4hIPCfmKQiCiAgICB9LAogICAgewogICAgICAiYWx0IjogIuCmrOCmvuCmnOCmvuCmsOCnh+CmsCDgpq3gpr/gpqHgprzgp4cg4Kam4KeB4KaHIOCmueCmvuCmpOCnhyDgppbgpr7gprLgpr8g4Kaq4KaV4KeH4KafIOCmieCmsuCnjeCmn+CnhyDgpqbgp4fgppbgpr7gpprgp43gppvgp4fgpqgg4Kau4Ka24Ka54KeB4KawIOCmpuCmvuCmpuCngSIsCiAgICAgICJkZXNjIjogIuCmrOCmvuCmnOCmvuCmsOCnhyDgppfgpr/gpq/gprzgp4cg4Kam4Ka+4Kam4KeB4KawIOCmpuCngeCmhyDgpqrgppXgp4fgpp/gpocg4KaW4Ka+4Kay4Ka/ISDgpqbgp43gprDgpqzgp43gpq/gpq7gp4LgprLgp43gpq/gp4fgprAg4KaP4KaHIOCmr+CngeCml+CnhyDgprjgpqzgpr7gprDgpocg4Kak4KeLIOCmj+CmleCmhyDgppfgprLgp43gpqog4oCUIOCmtuCngeCmp+CngSDgpqbgpr7gpqbgp4Eg4Ka44KeH4Kaf4Ka+IOCmueCnh+CmuOCnhyDgpqzgprLgp4fgpqjgpaQiLAogICAgICAiaW1nIjogImFzc2V0cy9wb3N0NS5qcGciLAogICAgICAidGFnIjogIuCmruCmtuCmueCngeCmsCDgprjgp43gpqrgp4fgprbgpr7gprIiLAogICAgICAidGl0bGUiOiAi4Kas4Ka+4Kac4Ka+4Kaw4KeHIOCmpuCmvuCmpuCngeCmsCDgppbgpr7gprLgpr8g4Kaq4KaV4KeH4KafIPCfm5IiCiAgICB9CiAgXSwKICAiaGFuZGxlIjogIm1hc2hob29yIiwKICAiaGVybyI6ICLgpqzgpqHgprwg4Kaq4Ka+4KaX4Kah4Ka84Ka/LCDgprjgpr7gpqbgpr4g4Kam4Ka+4Kah4Ka84Ka/LCDgprngpr7gpqTgp4cg4Kay4Ka+4Kag4Ka/IOKAlCDgpobgprAg4Kau4KeB4KaW4KeHIOCmuOCmrOCmmuCnh+Cmr+CmvOCnhyDgpqfgpr7gprDgpr7gprLgp4sg4KaF4Ka44KeN4Kak4KeN4KawOiDgprngpr7gprjgpr/gpaQg4Kau4Ka24Ka54KeB4KawIOCmruCmvuCmqOCnh+CmhyDgppXgp43gpq/gpr7gprDgpr/gppXgp4fgpprgpr7gprAsIOCmuOCnjeCmr+CmvuCmn+CmvuCmr+CmvOCmvuCmsCDgpobgprAg4KaW4Ka+4KaB4Kaf4Ka/IOCmj+CmqOCnjeCmn+CmvuCmsOCmn+Cnh+Cmh+CmqOCmruCnh+CmqOCnjeCmnyDigJQg4Ka44Kau4Ka+4Kac4KeH4KawIOCmhuCmr+CmvOCmqOCmvuCmr+CmvCDgprngpr7gprjgpr/gprAg4KaG4KaZ4KeB4Kay4KWkIiwKICAibGluZXMiOiBbCiAgICAi4Kaq4KeH4KaB4Kav4Ka84Ka+4Kac4KeH4KawIOCmpuCmvuCmriDgpq7gprngpr7gppXgpr7gprbgp4cg4KaX4KeH4Kab4KeHIOKAlCDgpo/gpqzgpr7gprAg4Kaw4KaV4KeH4Kaf4KeHIOCmleCmsOCnhyDgpqzgpr7gppzgpr7gprDgp4cg4Kav4KeH4Kak4KeHIOCmueCmrOCnhyEg8J+agCIsCiAgICAi4KaG4KaX4KeHIOCmruCmvuCmqOCngeCmtyDgppbgpqzgprAg4Kaq4Kah4Ka84KakIOCmleCmvuCml+CmnOCnhywg4KaP4KaW4KaoIOCmleCmvuCml+CmnOCmhyDgpq7gpr7gpqjgp4HgprfgppXgp4cg4Kaq4Kah4Ka84KeHISDwn5ee77iPIiwKICAgICLgpprgpr7gpq/gprzgp4fgprAg4Kam4Ka+4KauIOCmrOCmvuCmoeCmvOCmsuCnh+CmkyDgpobgpqHgp43gpqHgpr4g4Kal4Ka+4Kau4Kas4KeHIOCmqOCmviDigJQg4KaG4Kah4KeN4Kah4Ka+IOCmpOCniyDgpqvgp43gprDgpr8sIOCmtuCngeCmp+CngSDgpqzgpr/gprfgpq/gprzgpp/gpr4g4Kam4Ka+4Kau4Ka/ISDimJUiLAogICAgIuCmhuCmruCmvuCmsCDgprLgpr7gpqDgpr/gpp/gpr4g4Kam4KeB4Kaw4KeN4Kas4KayIOCmueCmpOCnhyDgpqrgpr7gprDgp4csIOCmleCmv+CmqOCnjeCmpOCngSDgpq/gp4HgppXgp43gpqTgpr/gpp/gpr4g4KaP4KaW4Kao4KeLIOCmuOCni+CmnOCmviDgpqbgpr7gpoHgpqHgprzgpr/gpq/gprzgp4cg4KaG4Kab4KeHISDwn6avIiwKICAgICLgpq/gp4cg4Kam4KeH4Ka24KeHIOCmueCmvuCmuOCmvyDgpqvgp43gprDgpr8sIOCmuOCnhyDgpqbgp4fgprbgp4cg4Kam4KeB4KaD4KaW4KeH4KawIOCmrOCnjeCmr+CmrOCmuOCmviDgpprgprLgp4cg4Kao4Ka+ISDwn5iCIiwKICAgICLgpqzgpqHgprwg4Kas4Kah4Ka8IOCmleCmpeCmviDgpqzgprLgpr4g4Ka44Ka54KacIOKAlCDgppXgpqDgpr/gpqgg4Ka54Kay4KeLIOCmj+CmlSDgprLgpr7gpofgpqjgp4cg4Ka44KasIOCmrOCmsuCnhyDgpqvgp4fgprLgpr4hIPCfjq8iLAogICAgIuCmquCmvuCml+CmoeCmvOCmv+Cmn+CmviDgpqzgpqHgprwg4Kag4Ka/4KaV4KaHLCDgppXgpr/gpqjgp43gpqTgp4Eg4Kak4Ka+4KawIOCmmuCnh+Cmr+CmvOCnh+CmkyDgpqzgpqHgprwg4KaG4Kau4Ka+4KawIOCmp+CniOCmsOCnjeCmryDigJQg4Kau4Ka+4Kad4KeHIOCmruCmvuCmneCnhyEg8J+YjCIsCiAgICAi4KaW4Kas4KawIOCmr+CmpOCmhyDgprjgpr/gprDgpr/gpq/gprzgpr7gprgg4Ka54KeL4KaVLCDgpqbgpr7gpqbgp4HgprAg4Kaa4Ka24Kau4Ka+4Kav4Ka8IOCmuOCmrOCmhyDgppXgpq7gp4fgpqHgpr8hIPCfkZMiCiAgXSwKICAicXVvdGUiOiAi4oCc4Ka54Ka+4Ka44Ka/IOCmueCmsuCniyDgprjgpqzgpprgp4fgpq/gprzgp4cg4Kat4Kam4KeN4KawIOCmquCnjeCmsOCmpOCmv+CmrOCmvuCmpiDigJRcbuCmhuCmsCDgprjgp43gpq/gpr7gpp/gpr7gpq/gprzgpr7gprAg4Kak4Ka+4KawIOCmuOCmrOCmmuCnh+Cmr+CmvOCnhyDgprjgp4Hgpqjgp43gpqbgprAg4Kat4Ka+4Ka34Ka+4KWk4oCdIiwKICAidGVybXMiOiBbCiAgICAi4KaP4KaHIOCmk+Cmr+CmvOCnh+CmrOCmuOCmvuCmh+Cmn+Cnh+CmsCDgprjgpqwg4KaV4Ka+4Kaw4KeN4Kaf4KeB4KaoLCDgppvgpqzgpr8g4KaTIOCmleCmqOCmn+Cnh+CmqOCnjeCmnyBNYXNoaG9vci3gpo/gprAg4Ka44Kau4KeN4Kaq4Kak4KeN4Kak4Ka/OyDgpoXgpqjgp4Hgpq7gpqTgpr8g4Kab4Ka+4Kah4Ka84Ka+IOCmleCmquCmvyDgpqzgpr4g4Kaq4KeB4Kao4KaD4Kaq4KeN4Kaw4KaV4Ka+4Ka2IOCmqOCmv+Cmt+Cnh+Cmp+ClpCIsCiAgICAi4KaP4KaW4Ka+4Kao4KaV4Ka+4KawIOCmuOCmrCDgppXgpqjgpp/gp4fgpqjgp43gpp8g4Ka44KeN4Kav4Ka+4Kaf4Ka+4Kav4Ka84Ka+4KawL+CmrOCnjeCmr+CmmeCnjeCml+CmvuCmpOCnjeCmruCmlSDigJQg4Kas4Ka/4Kao4KeL4Kam4Kao4KeH4KawIOCmieCmpuCnjeCmpuCnh+CmtuCnjeCmr+CnhyDgpqTgp4jgprDgpr8sIOCmleCni+CmqOCniyDgpqzgp43gpq/gppXgp43gpqTgpr8g4Kas4Ka+IOCmquCnjeCmsOCmpOCmv+Cmt+CnjeCmoOCmvuCmqOCmleCnhyDgprngp4fgpq/gprwg4KaV4Kaw4Ka+IOCmieCmpuCnjeCmpuCnh+CmtuCnjeCmryDgpqjgpq/gprzgpaQiLAogICAgIuCmm+CmrOCmvyDgpqHgpr7gpongpqjgprLgp4vgpqEg4KaV4Kaw4KeHIOCmrOCnjeCmr+CmleCnjeCmpOCmv+Cml+CmpOCmreCmvuCmrOCnhyDgpqbgp4fgppbgpr4g4Kav4Ka+4Kas4KeHLCDgppXgpr/gpqjgp43gpqTgp4Eg4Kas4Ka+4Kaj4Ka/4Kac4KeN4Kav4Ka/4KaVIOCmrOCnjeCmr+CmrOCmueCmvuCmsCDgpqjgpr/gprfgp4fgpqfgpaQiLAogICAgIuCmleCni+CmqOCniyDgppXgpqjgpp/gp4fgpqjgp43gpp8g4Kao4Ka/4Kav4Ka84KeHIOCmhuCmquCmpOCnjeCmpOCmvyDgpqXgpr7gppXgprLgp4cge2VtYWlsfS3gpo8g4Kav4KeL4KaX4Ka+4Kav4KeL4KaXIOCmleCmsOCngeCmqOClpCIsCiAgICAi4KaP4KaHIOCmtuCmsOCnjeCmpOCmvuCmrOCmsuCmvyDgpq/gp4fgppXgp4vgpqjgp4sg4Ka44Kau4Kav4Ka8IOCmquCmsOCmv+CmrOCmsOCnjeCmpOCmqCDgprngpqTgp4cg4Kaq4Ka+4Kaw4KeH4KWkIgogIF0sCiAgInNvY2lhbHMiOiBbCiAgICB7CiAgICAgICJuYW1lIjogIkZhY2Vib29rIiwKICAgICAgImJuIjogIuCmq+Cnh+CmuOCmrOCngeCmlSIsCiAgICAgICJub3RlIjogIuCmreCmv+CmoeCmv+Cmkywg4Kaq4KeL4Ka44KeN4KafIOCmhuCmsCDgprLgpr7gpofgpq0g4KaG4Kah4KeN4Kah4Ka+IgogICAgfSwKICAgIHsKICAgICAgIm5hbWUiOiAiSW5zdGFncmFtIiwKICAgICAgImJuIjogIuCmh+CmqOCmuOCnjeCmn+CmvuCml+CnjeCmsOCmvuCmriIsCiAgICAgICJub3RlIjogIuCmleCnjeCmr+CmvuCmsOCmv+CmleCnh+CmmuCmvuCmsCDgpobgprAg4Kaw4Ka/4Kay4Ka44KeH4KawIOCmreCmvuCmqOCnjeCmoeCmvuCmsCIKICAgIH0sCiAgICB7CiAgICAgICJuYW1lIjogIlggKFR3aXR0ZXIpIiwKICAgICAgImJuIjogIuCmj+CmleCnjeCmuCAvIOCmn+CngeCmh+Cmn+CmvuCmsCIsCiAgICAgICJub3RlIjogIuCmj+CmlSDgprLgpr7gpofgpqjgp4fgprAg4Kan4Ka+4Kaw4Ka+4Kay4KeLIOCmuOCnjeCmr+CmvuCmn+CmvuCmr+CmvOCmvuCmsCIKICAgIH0sCiAgICB7CiAgICAgICJuYW1lIjogIlRpa1RvayIsCiAgICAgICJibiI6ICLgpp/gpr/gppXgpp/gppUiLAogICAgICAibm90ZSI6ICLgppvgp4vgpp8g4Kat4Ka/4Kah4Ka/4KaTLCDgpqzgpqHgprwg4Ka54Ka+4Ka44Ka/IgogICAgfSwKICAgIHsKICAgICAgIm5hbWUiOiAiU25hcGNoYXQiLAogICAgICAiYm4iOiAi4Ka44KeN4Kao4KeN4Kav4Ka+4Kaq4Kaa4KeN4Kav4Ka+4KafIiwKICAgICAgIm5vdGUiOiAi4Kam4Ka+4Kam4KeB4KawIOCmruCmnOCmvuCmsCDgprjgp43gpqjgp43gpq/gpr7gpqog4Kau4KeB4Ka54KeC4Kaw4KeN4KakIgogICAgfSwKICAgIHsKICAgICAgIm5hbWUiOiAiVGVsZWdyYW0iLAogICAgICAiYm4iOiAi4Kaf4KeH4Kay4Ka/4KaX4KeN4Kaw4Ka+4KauIiwKICAgICAgIm5vdGUiOiAi4Kaa4KeN4Kav4Ka+4Kao4KeH4Kay4KeHIOCmuOCmsOCmvuCmuOCmsOCmvyDgprjgpqwg4KaG4Kaq4Kah4KeH4KafIgogICAgfSwKICAgIHsKICAgICAgIm5hbWUiOiAiWW91VHViZSIsCiAgICAgICJibiI6ICLgpofgpongpp/gpr/gpongpqwiLAogICAgICAibm90ZSI6ICLgprLgpq7gp43gpqzgpr4g4Kat4Ka/4Kah4Ka/4KaTIOCmhuCmsCDgprjgp43gpqrgp4fgprbgpr7gprIg4Kaq4Kaw4KeN4KasIgogICAgfQogIF0KfQ==", {cache:"no-store"})
       .then(function(r){ if(!r.ok) throw new Error("no content.json"); return r.json(); })
-      .then(function(d){ mergeState(d); applyAll(); })
-      .catch(function(){ /* স্থির HTML-এর কনটেন্টই থাকবে */ });
+      .then(function(d){ mergeState(d); applyAll(); snapshotPublished(); })
+      .catch(function(){ snapshotPublished(); /* স্থির HTML-এর কনটেন্টই থাকবে */ });
   }
 
   /* ---------- admin panel ---------- */
@@ -1169,6 +1173,18 @@
   var GH_CONTENTS_URL = "https://api.github.com/repos/mashhoor-toon/mashhoor-toon.github.io/contents/assets/content.json";
   var drawer = document.getElementById("adminDrawer"),
       overlay = document.getElementById("adminOverlay");
+  /* টোকেন শুধু এই পেজ খোলা থাকা পর্যন্ত মেমোরিতে থাকে — স্থায়ীভাবে কোথাও সেভ হয় না (নিরাপত্তা)।
+     একবার পেস্ট করলে প্যানেল বন্ধ-খোলা বা রিসেটেও তা থেকে যায়; শুধু পেজ বন্ধ/রিলোডে মুছে যায়। */
+  var sessionToken = "";
+  var tokenInput = document.getElementById("ghToken"),
+      tokenState = document.getElementById("tokenState");
+  function syncTokenUI(){
+    tokenState.textContent = sessionToken
+      ? "✓ টোকেন মনে রাখা হয়েছে — এই পেজ বন্ধ বা রিলোড না করা পর্যন্ত আর পেস্ট করতে হবে না।"
+      : "টোকেন এখনো দেওয়া হয়নি — উপরের ঘরে একবার পেস্ট করুন।";
+  }
+  tokenInput.addEventListener("input", function(){ sessionToken = tokenInput.value.trim(); syncTokenUI(); });
+  syncTokenUI();
   function openAdmin(){ drawer.classList.add("open"); overlay.classList.add("show"); }
   function closeAdmin(){ drawer.classList.remove("open"); overlay.classList.remove("show"); }
   /* অ্যাডমিন প্যানেল শুধু আলাদা লিংক (#admin) দিয়ে খুলবে — সাইটে কোনো বাটন বা ইশারা নেই */
@@ -1194,6 +1210,8 @@
     document.getElementById("admLines").value = state.lines.join("\n");
     if(state.red) document.getElementById("admRed").value = state.red;
     if(state.pink) document.getElementById("admPink").value = state.pink;
+    if(sessionToken && !tokenInput.value) tokenInput.value = sessionToken;
+    syncTokenUI();
     buildEpEditors();
   }
   function tryUnlock(){
@@ -1288,7 +1306,31 @@
     if(arr.length){ state.lines = arr; lastIdx = -1; showToast("ওয়ান-লাইনার আপডেট হয়েছে ✅ — স্থায়ী করতে পাবলিশ করুন"); }
   });
 
-  document.getElementById("admReset").addEventListener("click", function(){ location.reload(); });
+  /* পাবলিশ করা অবস্থার স্ন্যাপশট — রিসেটে পুরো পেজ রিলোড না করে এটাই ফিরিয়ে আনা হয়,
+     যাতে টোকেন আর অ্যাডমিন সেশন না হারায় (আগে রিসেট মানেই রিলোড, আর রিলোড মানেই টোকেন আবার পেস্ট) */
+  var publishedSnapshot = null;
+  function snapshotPublished(){
+    try {
+      publishedSnapshot = JSON.parse(JSON.stringify({
+        hero: state.hero, quote: state.quote, email: state.email, address: state.address,
+        handle: state.handle, red: state.red, pink: state.pink, socials: state.socials,
+        episodes: state.episodes, lines: state.lines, terms: state.terms
+      }));
+    } catch(e){ publishedSnapshot = null; }
+  }
+  document.getElementById("admReset").addEventListener("click", function(){
+    if(!publishedSnapshot){ location.reload(); return; }
+    var s = JSON.parse(JSON.stringify(publishedSnapshot));
+    state.hero = s.hero; state.quote = s.quote; state.email = s.email; state.address = s.address;
+    state.handle = s.handle; state.red = s.red; state.pink = s.pink; state.socials = s.socials;
+    state.episodes = s.episodes; state.lines = s.lines; state.terms = s.terms;
+    document.documentElement.style.removeProperty("--red");
+    document.documentElement.style.removeProperty("--pink");
+    lastIdx = -1;
+    applyAll(); fillAdmin();
+    document.getElementById("pubStatus").textContent = "";
+    showToast("আসল (পাবলিশ করা) অবস্থায় ফিরে গেছে ↩️ — টোকেন আবার দিতে হবে না");
+  });
 
   /* ---------- publish to GitHub ---------- */
   function contentObject(){
@@ -1309,7 +1351,8 @@
   }
   document.getElementById("admPublish").addEventListener("click", function(){
     var st = document.getElementById("pubStatus");
-    var token = document.getElementById("ghToken").value.trim();
+    var token = sessionToken || document.getElementById("ghToken").value.trim();
+    if(token && token !== sessionToken){ sessionToken = token; syncTokenUI(); }
     if(!token){
       st.textContent = "⚠️ আগে উপরের ঘরে GitHub টোকেন পেস্ট করুন — টোকেন ছাড়া পাবলিশ করা যাবে না। টোকেন বানানোর নির্দেশনা ঠিক নিচেই দেওয়া আছে।";
       return;
@@ -1342,6 +1385,11 @@
         st.textContent = "❌ পাবলিশ হয়নি: " + e.message + " — টোকেনে repo স্কোপ দেওয়া আছে কিনা যাচাই করুন।";
       });
   });
+  document.getElementById("admForgetToken").addEventListener("click", function(){
+    sessionToken = ""; tokenInput.value = ""; syncTokenUI();
+    document.getElementById("pubStatus").textContent = "";
+    showToast("টোকেন মোছা হয়েছে 🗑️ — আবার পাবলিশ করতে হলে নতুন করে পেস্ট করতে হবে");
+  });
 
   /* ---------- backup download ---------- */
   document.getElementById("admDownload").addEventListener("click", function(){
@@ -1355,6 +1403,8 @@
     var lbx = clone.querySelector("#lightbox"); if(lbx) lbx.classList.remove("open");
     var li = clone.querySelector("#lbImg"); if(li) li.removeAttribute("src");
     clone.querySelectorAll("iframe.utterances").forEach(function(f){ f.remove(); });
+    var tk = clone.querySelector("#ghToken"); if(tk) tk.removeAttribute("value");
+    var ts = clone.querySelector("#tokenState"); if(ts) ts.textContent = "";
     var ta = clone.querySelector("#termsAccept");
     if(ta){ ta.textContent = "আমি শর্তাবলী মেনে নিলাম ✓"; ta.classList.remove("accepted"); }
     var ti = clone.querySelector("#termsAcceptInfo"); if(ti) ti.textContent = "";
