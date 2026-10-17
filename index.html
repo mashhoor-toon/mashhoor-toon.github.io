@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MASHHOOR</title>
+<style>
+  html,body{margin:0;padding:0;background:#0b0b10;color:#f5f5f5;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  #boot{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+  #boot .ring{width:48px;height:48px;border-radius:50%;border:4px solid rgba(255,255,255,.14);border-top-color:#e11d48;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #boot p{margin:0;font-size:13px;letter-spacing:.28em;color:#a1a1aa}
+  #boot .err{letter-spacing:0;font-size:14px;color:#f87171;max-width:440px;text-align:center;line-height:1.6}
+</style>
+</head>
+<body>
+<div id="boot" role="status" aria-live="polite">
+  <div class="ring" aria-hidden="true"></div>
+  <p>LOADING</p>
+</div>
+<noscript><meta http-equiv="refresh" content="0;url=mashhoor-personal-portfolio.html" /></noscript>
+<script>
+(function () {
+  function fail() {
+    var b = document.getElementById('boot');
+    if (b) b.innerHTML = '<p class="err">The site content could not be loaded. Please check your connection and refresh the page.</p>';
+  }
+  if (!window.fetch) { window.location.replace('mashhoor-personal-portfolio.html'); return; }
+  fetch('mashhoor-personal-portfolio.html', { cache: 'no-store' })
+    .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
+    .then(function (html) { document.open(); document.write(html); document.close(); })
+    .catch(fail);
+})();
+</script>
+</body>
+</html>
